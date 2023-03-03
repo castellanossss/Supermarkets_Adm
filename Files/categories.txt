@@ -1,0 +1,3 @@
+12;carnes;en esta categoria se venden productos  derivados de la vaca
+13;leche;se venden productos lacticos
+14;aseo;se venden productos de limpieza

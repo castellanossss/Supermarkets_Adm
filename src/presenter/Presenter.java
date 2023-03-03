@@ -1,5 +1,6 @@
 package presenter;
 
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 
@@ -14,12 +15,17 @@ import view.View;
 
 public class Presenter {
 	private View view;
-	
+	private SuppliersManager supplier;
+	private CustomerManager customer;
+	private CategoriesManager categories;
+	private ProductsManager product;
+	private SalesManager sale;
+	private FileManagerReader2 readSales;
 	public Presenter() {
 		view = new View();
 	}
 	
-	public void newSupplierOption() {
+	public void newSupplierOption() throws IOException {
 		supplier = new SuppliersManager("Files\\", "suppliers");
 		supplier.createSupplier(view.askForSupRut(), view.askForSupName(), 
 				new Address(view.askForSupCountry(), view.askForSupState(), view.askForSupCity(), view.askForSupNeighbordhood(), view.askForSupAddress()), 
@@ -27,7 +33,7 @@ public class Presenter {
 		view.displayArchiveInfo();
 	}
 	
-	public void newCustomerOption() {
+	public void newCustomerOption() throws IOException {
 		customer = new CustomerManager("Files\\", "customers");
 		customer.createCustomer(view.askForCustomerRut(), view.askForCustomerName(),
 				new Address(view.askForCustomerCountry(), view.askForCustomerState(), view.askForCustomerCity(), view.askForCustomerNeighbordhood(), view.askForCusAddress()));
@@ -40,11 +46,11 @@ public class Presenter {
 		view.displayArchiveInfo();
 	}
 	
-	public void newProductOption() {
+	public void newProductOption() throws IOException {
 		categories = new CategoriesManager("Files\\","categories");
 		product = new ProductsManager("Files\\","products");
 		categories.readCategories();
-		product.createProduct(12, "brayan", 12, 3, "camilo", categories);
+		product.createProduct(view.askForProId(),view.askForProName(),view.askForProActualPrice(),view.askForProStock(),view.askForProSupplier(), categories);
 		view.displayArchiveInfo();
 	}
 	
@@ -57,7 +63,7 @@ public class Presenter {
 		return date;
 	}
 	
-	public void recordSaleOption() {
+	public void recordSaleOption() throws IOException {
 		int id = view.askForSaleId();
 		view.salesDateInfo();
 		LocalDate date = generate_bill_date();
@@ -74,10 +80,10 @@ public class Presenter {
 		view.displayArchiveInfo();
 	}
 	
-	public void showAllSalesOption() {
+	public void showAllSalesOption() throws IOException {
 		String path = "Files\\bills.txt";
-		test = new FileManagerReader2(path);
-		String result = test.readFile();
+		readSales = new FileManagerReader2(path);
+		String result = readSales.readFile();
 		
 		view.showMessage("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n VENTAS REGISTRADAS\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
 				+ " La informacion esta organizada de la siguiente forma\n"
@@ -87,7 +93,7 @@ public class Presenter {
 	}
 	
 	
-	private void firstDecision() {
+	private void firstDecision() throws IOException {
 		int option = view.firstMenu();
 		
 		switch (option) {
@@ -103,7 +109,7 @@ public class Presenter {
 		}
 	}
 	
-	private void secondDecision() {
+	private void secondDecision() throws IOException {
 		int option = view.secondMenu();
 		
 		switch (option) {
@@ -132,7 +138,7 @@ public class Presenter {
 		}
 	}
 	
-	private void thirdDecision() {
+	private void thirdDecision() throws IOException {
 		int option = view.thirdMenu();
 		
 		switch (option) {
@@ -148,13 +154,13 @@ public class Presenter {
 		}
 	}
 	
-	private void run() {
+	private void run() throws IOException {
 		view.welcomeMessage();
 		firstDecision();
 	}
 	
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		Presenter main = new Presenter();
 		main.run();
 	}
